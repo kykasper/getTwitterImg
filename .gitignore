@@ -1,0 +1,12 @@
+#Twitter API Key
+config.py
+setting.py
+twpy_app_kani.py
+
+#test image
+test_image/
+
+#meta data
+__pycache__/
+.ipynb_checkpoints/
+.vscode/
