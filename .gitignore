@@ -3,8 +3,9 @@ config.py
 setting.py
 twpy_app_kani.py
 
-#test image
+#test
 test_image/
+test.ipynb
 
 #meta data
 __pycache__/
