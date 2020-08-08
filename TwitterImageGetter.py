@@ -5,7 +5,7 @@ import pandas as pd
 import datetime
 import time
 
-import sys, traceback
+import os, sys, traceback
 import config
 import urllib.error
 import urllib.request
@@ -13,12 +13,15 @@ import json
 
 
 class TwitterImageGetter():
-    def __init__(self):
+    def __init__(self, directory_name):
         consumer_key = config.CONSUMER_KEY
         consumer_secret = config.CONSUMER_SECRET
         auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
         self.api = tweepy.API(auth)
-        
+        self.directory_name = directory_name
+        path = r'./{}'.format(directory_name)
+        if not os.path.isdir(path):
+            os.makedirs(path)
         self.tweet_data = []
         self.image_url = []
         
@@ -38,7 +41,7 @@ class TwitterImageGetter():
             tweet['friends_count'] = result_tweet.user.friends_count
             tweet['retweet_count'] = result_tweet.retweet_count
             tweet['id_downloaded'] = False
-            print('media' in result_tweet.extended_entities)
+            # print('media' in result_tweet.extended_entities)
             if 'media' in result_tweet.extended_entities:
                 tweet['media'] = result_tweet.extended_entities['media']
                 self.tweet_data.append(tweet)
@@ -49,7 +52,7 @@ class TwitterImageGetter():
             print(d['created_at'])
             for (mi, media) in enumerate(d['media']):
                 url = '%s:orig' % media['media_url_https']
-                dst_path = './Pictures/scrpic/momokogodo/momokododo_{0:03d}_{1}.jpg'.format(di+1, mi+1)
+                dst_path = './{0}/{0}_{1:03d}_{2}.jpg'.format(self.directory_name, di+1, mi+1)
                 print(dst_path)
                 # dst_dir = 'data/src'
                 # dst_path = os.path.join(dst_dir, os.path.basename(url))
@@ -72,8 +75,9 @@ def main():
     first_name = '風花'
     texts = ['#{0}生誕祭2019 OR #{0}生誕祭 OR #{0}誕生祭 OR #{0}誕生祭2019', '{1} AND 誕生' ,'{1} AND "おめでと"']
     texts = [x.format(full_name, first_name) for x in texts]
-
-    getter = TwitterImageGetter()
+    texts =['#周防桃子']
+    directory_name = 'test2'
+    getter = TwitterImageGetter(directory_name)
     for text in texts:
         getter.get_tweet(text)
 
